@@ -1,0 +1,23 @@
+import { getConfig, getConfigBoolean, getConfigFloat, getConfigInt, getConfigJson, getConfigKeys, getConfigNumber, getConfigNumberArray, getConfigString, getConfigStringArray, logGroupConfigSummary, sendConfig, setConfig, setConfigBoolean, setConfigJson, setConfigNumber, setConfigNumberArray, setConfigString, setConfigStringArray, unsetConfig, } from './data/group/index.js';
+export const group = {
+    getString: getConfigString,
+    setString: setConfigString,
+    getNumber: getConfigNumber,
+    getInt: getConfigInt,
+    getFloat: getConfigFloat,
+    setNumber: setConfigNumber,
+    getBoolean: getConfigBoolean,
+    setBoolean: setConfigBoolean,
+    getStringArray: getConfigStringArray,
+    setStringArray: setConfigStringArray,
+    getNumberArray: getConfigNumberArray,
+    setNumberArray: setConfigNumberArray,
+    getJson: getConfigJson,
+    setJson: setConfigJson,
+    getKeys: getConfigKeys,
+    unset: unsetConfig,
+    send: sendConfig,
+    get: getConfig,
+    set: setConfig,
+    logSummary: logGroupConfigSummary,
+};

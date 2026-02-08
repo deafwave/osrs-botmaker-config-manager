@@ -1,0 +1,17 @@
+{
+  "extends": ["@tsconfig/node20/tsconfig"],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "sourceMap": false,
+    "declaration": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "types": ["@deafwave/osrs-botmaker-types"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/__tests__/**/*.ts"]
+}

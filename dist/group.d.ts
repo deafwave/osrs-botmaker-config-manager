@@ -1,0 +1,22 @@
+export declare const group: {
+    getString: (groupName: string, key: string, fallback?: string) => string;
+    setString: (groupName: string, key: string, value: string, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
+    getNumber: (groupName: string, key: string, fallback?: number | undefined) => number;
+    getInt: (groupName: string, key: string, fallback?: number | undefined) => number;
+    getFloat: (groupName: string, key: string, fallback?: number | undefined) => number;
+    setNumber: (groupName: string, key: string, value: number, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
+    getBoolean: (groupName: string, key: string, fallback?: boolean) => boolean;
+    setBoolean: (groupName: string, key: string, value: boolean, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
+    getStringArray: (groupName: string, key: string, fallback?: string[]) => string[];
+    setStringArray: (groupName: string, key: string, values: string[], options?: import("./index.js").ConfigWriteOptions | undefined) => void;
+    getNumberArray: (groupName: string, key: string, fallback?: number[]) => number[];
+    setNumberArray: (groupName: string, key: string, values: number[], options?: import("./index.js").ConfigWriteOptions | undefined) => void;
+    getJson: <T>(groupName: string, key: string, fallback: T) => T;
+    setJson: <T_1>(groupName: string, key: string, value: T_1, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
+    getKeys: (prefix: string) => string[];
+    unset: (groupName: string, key: string, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
+    send: () => void;
+    get: (groupName: string, key: string) => import("./data/group/aliases.js").ConfigAliasValue;
+    set: (groupName: string, key: string, value: string | number[], options?: import("./index.js").ConfigWriteOptions | undefined) => void;
+    logSummary: (groupName: string) => void;
+};
