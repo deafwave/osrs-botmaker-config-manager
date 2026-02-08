@@ -1,5 +1,6 @@
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { normalizeConfigValue, writeConfig } from '../shared/index.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { normalizeConfigValue } from '../shared/normalize-config-value.js'
+import { writeConfig } from '../shared/write-config.js'
 
 export const getConfigString = (groupName: string, key: string, fallback = ''): string => {
 	const rawValue = normalizeConfigValue(configManager.getConfiguration(groupName, key))

@@ -1,6 +1,9 @@
-import { getConfigString, setConfigString } from '../group/index.js'
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { buildProfileGroupName, normalizeConfigValue, setRSProfileConfigurationValue, writeConfig } from '../shared/index.js'
+import { getConfigString, setConfigString } from '../group/strings.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { normalizeConfigValue } from '../shared/normalize-config-value.js'
+import { buildProfileGroupName } from '../shared/profile-group.js'
+import { setRSProfileConfigurationValue } from '../shared/set-rs-profile-configuration.js'
+import { writeConfig } from '../shared/write-config.js'
 import { getProfileKey } from './keys.js'
 
 export const getProfileString = (groupName: string, key: string, fallback = ''): string => {

@@ -1,4 +1,4 @@
-import { RS_PROFILE_GROUP_SEGMENT } from '../shared/index.js'
+import { RS_PROFILE_GROUP_SEGMENT } from '../shared/profile-group.js'
 import { getConfigKeys } from './keys.js'
 
 export const logGroupConfigSummary = (groupName: string): void => {

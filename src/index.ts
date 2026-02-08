@@ -1,60 +1,75 @@
-import * as groupApi from './data/group/index.js'
-import * as profileApi from './data/profile/index.js'
+import { getConfig, setConfig } from './data/group/aliases.js'
+import { getConfigBoolean, setConfigBoolean } from './data/group/booleans.js'
+import { getConfigJson, setConfigJson } from './data/group/json.js'
+import { getConfigKeys, sendConfig, unsetConfig } from './data/group/keys.js'
+import { getConfigNumberArray, setConfigNumberArray } from './data/group/number-arrays.js'
+import { getConfigFloat, getConfigInt, getConfigNumber, setConfigNumber } from './data/group/numbers.js'
+import { getConfigStringArray, setConfigStringArray } from './data/group/string-arrays.js'
+import { getConfigString, setConfigString } from './data/group/strings.js'
+import { logGroupConfigSummary } from './data/group/summary.js'
+import { getProfileBoolean, getProfileBooleanForProfileKey, setProfileBoolean, setProfileBooleanForProfileKey } from './data/profile/booleans.js'
+import { getProfileConfig, setProfileConfig, unsetProfileConfig } from './data/profile/config.js'
+import { getProfileJson, setProfileJson } from './data/profile/json.js'
+import { getProfileConfigKeys, getProfileGroupName, getProfileKey, getProfileKeysForGroup, logProfileConfigSummary } from './data/profile/keys.js'
+import { getProfileNumberArray, setProfileNumberArray } from './data/profile/number-arrays.js'
+import { getProfileFloat, getProfileInt, getProfileIntForProfileKey, getProfileNumber, setProfileNumber, setProfileNumberForProfileKey } from './data/profile/numbers.js'
+import { getProfileStringArray, setProfileStringArray } from './data/profile/string-arrays.js'
+import { getProfileString, getProfileStringForProfileKey, setProfileString, setProfileStringForProfileKey } from './data/profile/strings.js'
 
 export const group = {
-	getString: groupApi.getConfigString,
-	setString: groupApi.setConfigString,
-	getNumber: groupApi.getConfigNumber,
-	getInt: groupApi.getConfigInt,
-	getFloat: groupApi.getConfigFloat,
-	setNumber: groupApi.setConfigNumber,
-	getBoolean: groupApi.getConfigBoolean,
-	setBoolean: groupApi.setConfigBoolean,
-	getStringArray: groupApi.getConfigStringArray,
-	setStringArray: groupApi.setConfigStringArray,
-	getNumberArray: groupApi.getConfigNumberArray,
-	setNumberArray: groupApi.setConfigNumberArray,
-	getJson: groupApi.getConfigJson,
-	setJson: groupApi.setConfigJson,
-	getKeys: groupApi.getConfigKeys,
-	unset: groupApi.unsetConfig,
-	send: groupApi.sendConfig,
-	get: groupApi.getConfig,
-	set: groupApi.setConfig,
-	logSummary: groupApi.logGroupConfigSummary,
+	getString: getConfigString,
+	setString: setConfigString,
+	getNumber: getConfigNumber,
+	getInt: getConfigInt,
+	getFloat: getConfigFloat,
+	setNumber: setConfigNumber,
+	getBoolean: getConfigBoolean,
+	setBoolean: setConfigBoolean,
+	getStringArray: getConfigStringArray,
+	setStringArray: setConfigStringArray,
+	getNumberArray: getConfigNumberArray,
+	setNumberArray: setConfigNumberArray,
+	getJson: getConfigJson,
+	setJson: setConfigJson,
+	getKeys: getConfigKeys,
+	unset: unsetConfig,
+	send: sendConfig,
+	get: getConfig,
+	set: setConfig,
+	logSummary: logGroupConfigSummary,
 }
 
 export const profile = {
-	getKey: profileApi.getProfileKey,
-	getGroupName: profileApi.getProfileGroupName,
-	getKeysForGroup: profileApi.getProfileKeysForGroup,
-	getConfigKeys: profileApi.getProfileConfigKeys,
-	getString: profileApi.getProfileString,
-	setString: profileApi.setProfileString,
-	getStringForProfileKey: profileApi.getProfileStringForProfileKey,
-	setStringForProfileKey: profileApi.setProfileStringForProfileKey,
-	getNumber: profileApi.getProfileNumber,
-	getInt: profileApi.getProfileInt,
-	getFloat: profileApi.getProfileFloat,
-	setNumber: profileApi.setProfileNumber,
-	getIntForProfileKey: profileApi.getProfileIntForProfileKey,
-	setNumberForProfileKey: profileApi.setProfileNumberForProfileKey,
-	getBoolean: profileApi.getProfileBoolean,
-	setBoolean: profileApi.setProfileBoolean,
-	getBooleanForProfileKey: profileApi.getProfileBooleanForProfileKey,
-	setBooleanForProfileKey: profileApi.setProfileBooleanForProfileKey,
-	getStringArray: profileApi.getProfileStringArray,
-	setStringArray: profileApi.setProfileStringArray,
-	getNumberArray: profileApi.getProfileNumberArray,
-	setNumberArray: profileApi.setProfileNumberArray,
-	getJson: profileApi.getProfileJson,
-	setJson: profileApi.setProfileJson,
-	unset: profileApi.unsetProfileConfig,
-	get: profileApi.getProfileConfig,
-	set: profileApi.setProfileConfig,
-	logSummary: profileApi.logProfileConfigSummary,
+	getKey: getProfileKey,
+	getGroupName: getProfileGroupName,
+	getKeysForGroup: getProfileKeysForGroup,
+	getConfigKeys: getProfileConfigKeys,
+	getString: getProfileString,
+	setString: setProfileString,
+	getStringForProfileKey: getProfileStringForProfileKey,
+	setStringForProfileKey: setProfileStringForProfileKey,
+	getNumber: getProfileNumber,
+	getInt: getProfileInt,
+	getFloat: getProfileFloat,
+	setNumber: setProfileNumber,
+	getIntForProfileKey: getProfileIntForProfileKey,
+	setNumberForProfileKey: setProfileNumberForProfileKey,
+	getBoolean: getProfileBoolean,
+	setBoolean: setProfileBoolean,
+	getBooleanForProfileKey: getProfileBooleanForProfileKey,
+	setBooleanForProfileKey: setProfileBooleanForProfileKey,
+	getStringArray: getProfileStringArray,
+	setStringArray: setProfileStringArray,
+	getNumberArray: getProfileNumberArray,
+	setNumberArray: setProfileNumberArray,
+	getJson: getProfileJson,
+	setJson: setProfileJson,
+	unset: unsetProfileConfig,
+	get: getProfileConfig,
+	set: setProfileConfig,
+	logSummary: logProfileConfigSummary,
 }
 
 export { createConfigScope, logConfigValues } from './data/config-scope.js'
 export type { ConfigScope, ConfigScopeMode, ConfigScopeOptions, LogConfigValuesOptions } from './data/config-scope.js'
-export type { ConfigWriteOptions } from './data/shared/index.js'
+export type { ConfigWriteOptions } from './data/shared/types.js'

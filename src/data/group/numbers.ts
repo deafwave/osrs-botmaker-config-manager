@@ -1,4 +1,4 @@
-import { createNumberAccessors } from '../shared/index.js'
+import { createNumberAccessors } from '../shared/accessors.js'
 import { getConfigString, setConfigString } from './strings.js'
 
 export const {

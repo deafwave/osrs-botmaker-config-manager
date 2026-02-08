@@ -1,5 +1,7 @@
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { parseNumber, splitCsv, writeConfig } from '../shared/index.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { parseNumber } from '../shared/parse-number.js'
+import { splitCsv } from '../shared/split-csv.js'
+import { writeConfig } from '../shared/write-config.js'
 import { setProfileNumberArray } from './number-arrays.js'
 import { getProfileString, setProfileString } from './strings.js'
 

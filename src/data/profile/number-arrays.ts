@@ -1,5 +1,6 @@
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { parseNumber, splitCsv } from '../shared/index.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { parseNumber } from '../shared/parse-number.js'
+import { splitCsv } from '../shared/split-csv.js'
 import { getProfileString, setProfileString } from './strings.js'
 
 export const getProfileNumberArray = (groupName: string, key: string, fallback: number[] = []): number[] => {

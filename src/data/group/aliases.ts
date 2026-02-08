@@ -1,5 +1,6 @@
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { parseNumber, splitCsv } from '../shared/index.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { parseNumber } from '../shared/parse-number.js'
+import { splitCsv } from '../shared/split-csv.js'
 import { setConfigNumberArray } from './number-arrays.js'
 import { getConfigString, setConfigString } from './strings.js'
 

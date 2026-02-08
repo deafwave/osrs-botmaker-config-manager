@@ -1,5 +1,5 @@
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { parseStringArrayValue, serializeStringArrayValue } from '../shared/index.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { parseStringArrayValue, serializeStringArrayValue } from '../shared/string-array-codec.js'
 import { getConfigString, setConfigString } from './strings.js'
 
 export const getConfigStringArray = (groupName: string, key: string, fallback: string[] = []): string[] => {

@@ -1,48 +1,23 @@
-import {
-	getConfigBoolean,
-	getConfigFloat,
-	getConfigInt,
-	getConfigJson,
-	getConfigKeys,
-	getConfigNumber,
-	getConfigNumberArray,
-	getConfigString,
-	getConfigStringArray,
-	setConfigBoolean,
-	setConfigJson,
-	setConfigNumber,
-	setConfigNumberArray,
-	setConfigString,
-	setConfigStringArray,
-	unsetConfig,
-} from './group/index.js'
-import {
-	getProfileBoolean,
-	getProfileBooleanForProfileKey,
-	getProfileConfigKeys,
-	getProfileFloat,
-	getProfileInt,
-	getProfileIntForProfileKey,
-	getProfileJson,
-	getProfileKey,
-	getProfileNumber,
-	getProfileNumberArray,
-	getProfileString,
-	getProfileStringArray,
-	getProfileStringForProfileKey,
-	setProfileBoolean,
-	setProfileBooleanForProfileKey,
-	setProfileJson,
-	setProfileNumber,
-	setProfileNumberArray,
-	setProfileNumberForProfileKey,
-	setProfileString,
-	setProfileStringArray,
-	setProfileStringForProfileKey,
-	unsetProfileConfig,
-} from './profile/index.js'
-import type { ConfigWriteOptions } from './shared/index.js'
-import { buildProfileGroupName, parseFloatNumber, parseNumber, parseStringArrayValue, splitCsv } from './shared/index.js'
+import { getConfigBoolean, setConfigBoolean } from './group/booleans.js'
+import { getConfigJson, setConfigJson } from './group/json.js'
+import { getConfigKeys, unsetConfig } from './group/keys.js'
+import { getConfigNumberArray, setConfigNumberArray } from './group/number-arrays.js'
+import { getConfigFloat, getConfigInt, getConfigNumber, setConfigNumber } from './group/numbers.js'
+import { getConfigStringArray, setConfigStringArray } from './group/string-arrays.js'
+import { getConfigString, setConfigString } from './group/strings.js'
+import { getProfileBoolean, getProfileBooleanForProfileKey, setProfileBoolean, setProfileBooleanForProfileKey } from './profile/booleans.js'
+import { getProfileJson, setProfileJson } from './profile/json.js'
+import { getProfileConfigKeys, getProfileKey } from './profile/keys.js'
+import { getProfileNumberArray, setProfileNumberArray } from './profile/number-arrays.js'
+import { getProfileFloat, getProfileInt, getProfileIntForProfileKey, getProfileNumber, setProfileNumber, setProfileNumberForProfileKey } from './profile/numbers.js'
+import { getProfileStringArray, setProfileStringArray } from './profile/string-arrays.js'
+import { getProfileString, getProfileStringForProfileKey, setProfileString, setProfileStringForProfileKey } from './profile/strings.js'
+import { unsetProfileConfig } from './profile/config.js'
+import type { ConfigWriteOptions } from './shared/types.js'
+import { parseFloatNumber, parseNumber } from './shared/parse-number.js'
+import { buildProfileGroupName } from './shared/profile-group.js'
+import { splitCsv } from './shared/split-csv.js'
+import { parseStringArrayValue } from './shared/string-array-codec.js'
 
 export type ConfigScopeMode = 'group' | 'profile'
 
@@ -413,7 +388,6 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 				unsetProfileConfig(group, key, resolvedOptions)
 				return
 			}
-
 			unsetConfig(buildProfileGroupName(group, profileKey), key, resolvedOptions)
 			return
 		}

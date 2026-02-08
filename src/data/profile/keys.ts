@@ -1,5 +1,5 @@
-import { getConfigKeys } from '../group/index.js'
-import { RS_PROFILE_GROUP_SEGMENT, buildProfileGroupName, extractProfileKeyFromConfigKey } from '../shared/index.js'
+import { getConfigKeys } from '../group/keys.js'
+import { RS_PROFILE_GROUP_SEGMENT, buildProfileGroupName, extractProfileKeyFromConfigKey } from '../shared/profile-group.js'
 
 export const getProfileKey = (): string => configManager.getRSProfileKey()
 
@@ -40,11 +40,13 @@ export const logProfileConfigSummary = (groupName: string): void => {
 		`Profile-scoped config summary for group '${groupName}': ${counts.size} profile(s), ${keys.length} key(s). Active profile: ${activeProfileKey}`,
 	)
 
-	const sortedProfileKeys = Array.from(counts.keys()).sort((a, b) => a.localeCompare(b))
-	sortedProfileKeys.forEach((profileKey) => {
-		bot.printLogMessage(`Profile '${profileKey}' has ${counts.get(profileKey) ?? 0} key(s).`)
-	})
+	Array.from(counts.entries())
+		.sort((a, b) => a[0].localeCompare(b[0]))
+		.forEach(([profileKey, count]) => {
+			const marker = profileKey === activeProfileKey ? ' (active)' : ''
+			bot.printLogMessage(`Profile ${profileKey}${marker}: ${count} key(s)`)
+		})
 }
 
 export const getProfileConfigKeys = (groupName: string, keyPrefix = ''): string[] =>
-	configManager.getRSProfileConfigurationKeys(groupName, configManager.getRSProfileKey(), keyPrefix) as string[]
+	(configManager.getRSProfileConfigurationKeys(groupName, getProfileKey(), keyPrefix) as string[])

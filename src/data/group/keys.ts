@@ -1,5 +1,5 @@
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { writeConfig } from '../shared/index.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { writeConfig } from '../shared/write-config.js'
 
 export const unsetConfig = (groupName: string, key: string, options?: ConfigWriteOptions): void => {
 	writeConfig(() => {

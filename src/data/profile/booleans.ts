@@ -1,5 +1,5 @@
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { parseBoolean } from '../shared/index.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { parseBoolean } from '../shared/parse-boolean.js'
 import { getProfileString, getProfileStringForProfileKey, setProfileString, setProfileStringForProfileKey } from './strings.js'
 
 export const getProfileBoolean = (groupName: string, key: string, fallback = false): boolean => {

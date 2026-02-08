@@ -1,5 +1,6 @@
-import type { ConfigWriteOptions } from '../shared/index.js'
-import { createNumberAccessors, parseIntNumber } from '../shared/index.js'
+import type { ConfigWriteOptions } from '../shared/types.js'
+import { createNumberAccessors } from '../shared/accessors.js'
+import { parseIntNumber } from '../shared/parse-number.js'
 import { getProfileString, getProfileStringForProfileKey, setProfileString, setProfileStringForProfileKey } from './strings.js'
 
 export const {
