@@ -1,1 +1,0 @@
-export declare const getProfileJson: <T>(groupName: string, key: string, fallback: T) => T, setProfileJson: <T>(groupName: string, key: string, value: T, options?: import("../shared/types.js").ConfigWriteOptions | undefined) => void;

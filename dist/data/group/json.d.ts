@@ -1,1 +1,0 @@
-export declare const getConfigJson: <T>(groupName: string, key: string, fallback: T) => T, setConfigJson: <T>(groupName: string, key: string, value: T, options?: import("../shared/types.js").ConfigWriteOptions | undefined) => void;
