@@ -7,67 +7,90 @@ import { getConfigFloat, getConfigInt, getConfigNumber, setConfigNumber } from '
 import { getConfigStringArray, setConfigStringArray } from './data/group/string-arrays.js'
 import { getConfigString, setConfigString } from './data/group/strings.js'
 import { logGroupConfigSummary } from './data/group/summary.js'
-import { getProfileBoolean, getProfileBooleanForProfileKey, setProfileBoolean, setProfileBooleanForProfileKey } from './data/profile/booleans.js'
+import {
+	getProfileBoolean,
+	getProfileBooleanForProfileKey,
+	setProfileBoolean,
+	setProfileBooleanForProfileKey,
+} from './data/profile/booleans.js'
 import { getProfileConfig, setProfileConfig, unsetProfileConfig } from './data/profile/config.js'
 import { getProfileJson, setProfileJson } from './data/profile/json.js'
-import { getProfileConfigKeys, getProfileGroupName, getProfileKey, getProfileKeysForGroup, logProfileConfigSummary } from './data/profile/keys.js'
+import {
+	getProfileConfigKeys,
+	getProfileGroupName,
+	getProfileKey,
+	getProfileKeysForGroup,
+	logProfileConfigSummary,
+} from './data/profile/keys.js'
 import { getProfileNumberArray, setProfileNumberArray } from './data/profile/number-arrays.js'
-import { getProfileFloat, getProfileInt, getProfileIntForProfileKey, getProfileNumber, setProfileNumber, setProfileNumberForProfileKey } from './data/profile/numbers.js'
+import {
+	getProfileFloat,
+	getProfileInt,
+	getProfileIntForProfileKey,
+	getProfileNumber,
+	setProfileNumber,
+	setProfileNumberForProfileKey,
+} from './data/profile/numbers.js'
 import { getProfileStringArray, setProfileStringArray } from './data/profile/string-arrays.js'
-import { getProfileString, getProfileStringForProfileKey, setProfileString, setProfileStringForProfileKey } from './data/profile/strings.js'
+import {
+	getProfileString,
+	getProfileStringForProfileKey,
+	setProfileString,
+	setProfileStringForProfileKey,
+} from './data/profile/strings.js'
 
 export const group = {
-	getString: getConfigString,
-	setString: setConfigString,
-	getNumber: getConfigNumber,
-	getInt: getConfigInt,
-	getFloat: getConfigFloat,
-	setNumber: setConfigNumber,
-	getBoolean: getConfigBoolean,
-	setBoolean: setConfigBoolean,
-	getStringArray: getConfigStringArray,
-	setStringArray: setConfigStringArray,
-	getNumberArray: getConfigNumberArray,
-	setNumberArray: setConfigNumberArray,
-	getJson: getConfigJson,
-	setJson: setConfigJson,
-	getKeys: getConfigKeys,
-	unset: unsetConfig,
-	send: sendConfig,
 	get: getConfig,
-	set: setConfig,
+	getBoolean: getConfigBoolean,
+	getFloat: getConfigFloat,
+	getInt: getConfigInt,
+	getJson: getConfigJson,
+	getKeys: getConfigKeys,
+	getNumber: getConfigNumber,
+	getNumberArray: getConfigNumberArray,
+	getString: getConfigString,
+	getStringArray: getConfigStringArray,
 	logSummary: logGroupConfigSummary,
+	send: sendConfig,
+	set: setConfig,
+	setBoolean: setConfigBoolean,
+	setJson: setConfigJson,
+	setNumber: setConfigNumber,
+	setNumberArray: setConfigNumberArray,
+	setString: setConfigString,
+	setStringArray: setConfigStringArray,
+	unset: unsetConfig,
 }
 
 export const profile = {
-	getKey: getProfileKey,
-	getGroupName: getProfileGroupName,
-	getKeysForGroup: getProfileKeysForGroup,
-	getConfigKeys: getProfileConfigKeys,
-	getString: getProfileString,
-	setString: setProfileString,
-	getStringForProfileKey: getProfileStringForProfileKey,
-	setStringForProfileKey: setProfileStringForProfileKey,
-	getNumber: getProfileNumber,
-	getInt: getProfileInt,
-	getFloat: getProfileFloat,
-	setNumber: setProfileNumber,
-	getIntForProfileKey: getProfileIntForProfileKey,
-	setNumberForProfileKey: setProfileNumberForProfileKey,
-	getBoolean: getProfileBoolean,
-	setBoolean: setProfileBoolean,
-	getBooleanForProfileKey: getProfileBooleanForProfileKey,
-	setBooleanForProfileKey: setProfileBooleanForProfileKey,
-	getStringArray: getProfileStringArray,
-	setStringArray: setProfileStringArray,
-	getNumberArray: getProfileNumberArray,
-	setNumberArray: setProfileNumberArray,
-	getJson: getProfileJson,
-	setJson: setProfileJson,
-	unset: unsetProfileConfig,
 	get: getProfileConfig,
-	set: setProfileConfig,
+	getBoolean: getProfileBoolean,
+	getBooleanForProfileKey: getProfileBooleanForProfileKey,
+	getConfigKeys: getProfileConfigKeys,
+	getFloat: getProfileFloat,
+	getGroupName: getProfileGroupName,
+	getInt: getProfileInt,
+	getIntForProfileKey: getProfileIntForProfileKey,
+	getJson: getProfileJson,
+	getKey: getProfileKey,
+	getKeysForGroup: getProfileKeysForGroup,
+	getNumber: getProfileNumber,
+	getNumberArray: getProfileNumberArray,
+	getString: getProfileString,
+	getStringArray: getProfileStringArray,
+	getStringForProfileKey: getProfileStringForProfileKey,
 	logSummary: logProfileConfigSummary,
+	set: setProfileConfig,
+	setBoolean: setProfileBoolean,
+	setBooleanForProfileKey: setProfileBooleanForProfileKey,
+	setJson: setProfileJson,
+	setNumber: setProfileNumber,
+	setNumberArray: setProfileNumberArray,
+	setNumberForProfileKey: setProfileNumberForProfileKey,
+	setString: setProfileString,
+	setStringArray: setProfileStringArray,
+	setStringForProfileKey: setProfileStringForProfileKey,
+	unset: unsetProfileConfig,
 }
 
 export { createConfigScope, logConfigValues } from './data/config-scope.js'
