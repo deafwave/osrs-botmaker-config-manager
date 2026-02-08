@@ -1,6 +1,6 @@
 {
   "name": "@deafwave/osrs-botmaker-config-manager",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Config manager helpers for osrs-botmaker runtimes",
   "license": "UNLICENSED",
   "type": "module",
