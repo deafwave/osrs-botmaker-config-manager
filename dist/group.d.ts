@@ -1,3 +1,4 @@
+import * as groupApi from './data/group/index.js';
 export declare const group: {
     getString: (groupName: string, key: string, fallback?: string) => string;
     setString: (groupName: string, key: string, value: string, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
@@ -16,7 +17,7 @@ export declare const group: {
     getKeys: (prefix: string) => string[];
     unset: (groupName: string, key: string, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
     send: () => void;
-    get: (groupName: string, key: string) => import("./data/group/aliases.js").ConfigAliasValue;
+    get: (groupName: string, key: string) => groupApi.ConfigAliasValue;
     set: (groupName: string, key: string, value: string | number[], options?: import("./index.js").ConfigWriteOptions | undefined) => void;
     logSummary: (groupName: string) => void;
 };

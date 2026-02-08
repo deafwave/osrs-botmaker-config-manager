@@ -1,3 +1,4 @@
+import * as profileApi from './data/profile/index.js';
 export declare const profile: {
     getKey: () => string;
     getGroupName: (groupName: string, profileKey: string) => string;
@@ -24,7 +25,7 @@ export declare const profile: {
     getJson: <T>(groupName: string, key: string, fallback: T) => T;
     setJson: <T_1>(groupName: string, key: string, value: T_1, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
     unset: (groupName: string, key: string, options?: import("./index.js").ConfigWriteOptions | undefined) => void;
-    get: (groupName: string, key: string) => import("./data/profile/config.js").ProfileConfigAliasValue;
+    get: (groupName: string, key: string) => profileApi.ProfileConfigAliasValue;
     set: (groupName: string, key: string, value: string | number[], options?: import("./index.js").ConfigWriteOptions | undefined) => void;
     logSummary: (groupName: string) => void;
 };
