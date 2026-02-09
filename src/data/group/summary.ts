@@ -4,7 +4,7 @@ import { getGroupKeys } from './keys.js'
 export const logGroupConfigSummary = (groupName: string): void => {
 	const keys = getGroupKeys(`${groupName}.`)
 	if (keys.length === 0) {
-		bot.printLogMessage(`No config keys found for group '${groupName}'.`)
+		log.printGameMessage(`No config keys found for group '${groupName}'.`)
 		return
 	}
 
@@ -20,18 +20,18 @@ export const logGroupConfigSummary = (groupName: string): void => {
 		}
 	})
 
-	bot.printLogMessage(
+	log.printGameMessage(
 		`Config summary for group '${groupName}': ${keys.length} total key(s), ${groupScoped.length} group-level, ${profileScopedCount} profile-scoped.`,
 	)
 
 	if (groupScoped.length > 0) {
 		const sortedKeys = groupScoped.slice().sort((a, b) => a.localeCompare(b))
 		sortedKeys.forEach((key) => {
-			bot.printLogMessage(`Group-level key: ${key}`)
+			log.printGameMessage(`Group-level key: ${key}`)
 		})
 	}
 
 	if (profileScopedCount > 0) {
-		bot.printLogMessage(`Profile-scoped keys detected for '${groupName}'. Use logProfileConfigSummary('${groupName}') for details.`)
+		log.printGameMessage(`Profile-scoped keys detected for '${groupName}'. Use profile.logSummary('${groupName}') for details.`)
 	}
 }
