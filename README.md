@@ -26,3 +26,29 @@ const storage: RsProfileStorage = { group: 'builder', sync: true }
 setStoredString(storage, 'mode', 'safe')
 const storedMode = getStoredString(storage, 'mode', 'fallback')
 ```
+
+## Generic Setter Values
+
+`group.set`, `profile.set`, and `scope.set` accept any JSON-serializable value.
+
+Accepted values include:
+
+- strings
+- numbers
+- booleans
+- `null`
+- arrays
+- plain objects
+
+Rejected values throw `TypeError("Config value must be JSON-serializable.")`:
+
+- `undefined`
+- functions
+- symbols
+- bigint values
+- circular / non-serializable objects
+
+## Sync Behavior
+
+Writes do not call `configManager.sendConfig()` unless sync is enabled.
+- Manual sync: call `sendConfig()` to force sending config.
