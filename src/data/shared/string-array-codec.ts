@@ -1,7 +1,5 @@
 import { splitCsv } from './split-csv.js'
-
-const isStringArray = (value: unknown): value is string[] =>
-	Array.isArray(value) && value.every((entry): entry is string => typeof entry === 'string')
+import { isStringArray, parseStoredData, toStoredJson } from './storage.js'
 
 export const parseStringArrayValue = (rawValue: string): string[] => {
 	const trimmed = rawValue.trim()
@@ -9,16 +7,12 @@ export const parseStringArrayValue = (rawValue: string): string[] => {
 		return []
 	}
 
-	try {
-		const parsed = JSON.parse(trimmed) as unknown
-		if (isStringArray(parsed)) {
-			return parsed
-		}
-	} catch {
-		// Fall back to legacy CSV storage.
+	const parsed = parseStoredData(trimmed)
+	if (parsed.ok && isStringArray(parsed.value)) {
+		return parsed.value
 	}
 
 	return splitCsv(rawValue)
 }
 
-export const serializeStringArrayValue = (values: string[]): string => JSON.stringify(values)
+export const serializeStringArrayValue = (values: string[]): string => toStoredJson(values)

@@ -1,8 +1,8 @@
 import { RS_PROFILE_GROUP_SEGMENT } from '../shared/profile-group.js'
-import { getConfigKeys } from './keys.js'
+import { getGroupKeys } from './keys.js'
 
 export const logGroupConfigSummary = (groupName: string): void => {
-	const keys = getConfigKeys(`${groupName}.`)
+	const keys = getGroupKeys(`${groupName}.`)
 	if (keys.length === 0) {
 		bot.printLogMessage(`No config keys found for group '${groupName}'.`)
 		return

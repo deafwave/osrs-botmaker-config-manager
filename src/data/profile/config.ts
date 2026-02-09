@@ -1,11 +1,9 @@
 import type { ConfigWriteOptions } from '../shared/types.js'
-import { parseNumber } from '../shared/parse-number.js'
-import { splitCsv } from '../shared/split-csv.js'
+import { isNumberArray, parseStoredData, toStoredJson } from '../shared/storage.js'
 import { writeConfig } from '../shared/write-config.js'
-import { setProfileNumberArray } from './number-arrays.js'
 import { getProfileString, setProfileString } from './strings.js'
 
-export const unsetProfileConfig = (groupName: string, key: string, options?: ConfigWriteOptions): void => {
+export const unsetProfileValue = (groupName: string, key: string, options?: ConfigWriteOptions): void => {
 	writeConfig(() => {
 		configManager.unsetRSProfileConfiguration(groupName, key)
 	}, options)
@@ -14,28 +12,24 @@ export const unsetProfileConfig = (groupName: string, key: string, options?: Con
 export type ProfileConfigAliasValue = number[] | string
 
 const parseAliasValue = (rawValue: string): ProfileConfigAliasValue => {
-	// TODO: If this number-like string behavior causes problems, store/read arrays as JSON instead.
 	if (!rawValue.trim()) {
 		return []
 	}
 
-	const entries = splitCsv(rawValue)
-	const parsedNumbers = entries.map(parseNumber)
+	const parsed = parseStoredData(rawValue)
+	if (parsed.ok && typeof parsed.value === 'string') {
+		return parsed.value
+	}
 
-	if (parsedNumbers.length > 0 && parsedNumbers.every((value): value is number => value !== null)) {
-		return parsedNumbers
+	if (parsed.ok && isNumberArray(parsed.value)) {
+		return parsed.value
 	}
 
 	return rawValue
 }
 
-export const getProfileConfig = (groupName: string, key: string): ProfileConfigAliasValue =>
+export const getProfileValue = (groupName: string, key: string): ProfileConfigAliasValue =>
 	parseAliasValue(getProfileString(groupName, key, ''))
 
-export const setProfileConfig = (groupName: string, key: string, value: number[] | string, options?: ConfigWriteOptions): void => {
-	if (Array.isArray(value)) {
-		setProfileNumberArray(groupName, key, value, options)
-	} else {
-		setProfileString(groupName, key, value.toString(), options)
-	}
-}
+export const setProfileValue = (groupName: string, key: string, value: unknown, options?: ConfigWriteOptions): void =>
+	setProfileString(groupName, key, toStoredJson(value), options)

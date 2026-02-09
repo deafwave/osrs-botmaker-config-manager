@@ -1,69 +1,40 @@
-import { getConfig, setConfig } from './data/group/aliases.js'
-import { getConfigBoolean, setConfigBoolean } from './data/group/booleans.js'
-import { getConfigJson, setConfigJson } from './data/group/json.js'
-import { getConfigKeys, sendConfig, unsetConfig } from './data/group/keys.js'
-import { getConfigNumberArray, setConfigNumberArray } from './data/group/number-arrays.js'
-import { getConfigFloat, getConfigInt, getConfigNumber, setConfigNumber } from './data/group/numbers.js'
-import { getConfigStringArray, setConfigStringArray } from './data/group/string-arrays.js'
-import { getConfigString, setConfigString } from './data/group/strings.js'
+import { getGroupValue, setGroupValue } from './data/group/aliases.js'
+import { getGroupBoolean } from './data/group/booleans.js'
+import { getGroupJson } from './data/group/json.js'
+import { getGroupKeys, syncConfig, unsetGroupValue } from './data/group/keys.js'
+import { getGroupNumberArray } from './data/group/number-arrays.js'
+import { getGroupFloat, getGroupInt, getGroupNumber } from './data/group/numbers.js'
+import { getGroupStringArray } from './data/group/string-arrays.js'
+import { getGroupString } from './data/group/strings.js'
 import { logGroupConfigSummary } from './data/group/summary.js'
-import {
-	getProfileBoolean,
-	getProfileBooleanForProfileKey,
-	setProfileBoolean,
-	setProfileBooleanForProfileKey,
-} from './data/profile/booleans.js'
-import { getProfileConfig, setProfileConfig, unsetProfileConfig } from './data/profile/config.js'
-import { getProfileJson, setProfileJson } from './data/profile/json.js'
-import {
-	getProfileConfigKeys,
-	getProfileGroupName,
-	getProfileKey,
-	getProfileKeysForGroup,
-	logProfileConfigSummary,
-} from './data/profile/keys.js'
-import { getProfileNumberArray, setProfileNumberArray } from './data/profile/number-arrays.js'
-import {
-	getProfileFloat,
-	getProfileInt,
-	getProfileIntForProfileKey,
-	getProfileNumber,
-	setProfileNumber,
-	setProfileNumberForProfileKey,
-} from './data/profile/numbers.js'
-import { getProfileStringArray, setProfileStringArray } from './data/profile/string-arrays.js'
-import {
-	getProfileString,
-	getProfileStringForProfileKey,
-	setProfileString,
-	setProfileStringForProfileKey,
-} from './data/profile/strings.js'
+import { getProfileBoolean, getProfileBooleanForProfileKey } from './data/profile/booleans.js'
+import { getProfileValue, setProfileValue, unsetProfileValue } from './data/profile/config.js'
+import { getProfileJson } from './data/profile/json.js'
+import { getProfileConfigKeys, getProfileGroupName, getProfileKey, getProfileKeysForGroup, logProfileConfigSummary } from './data/profile/keys.js'
+import { getProfileNumberArray } from './data/profile/number-arrays.js'
+import { getProfileFloat, getProfileInt, getProfileIntForProfileKey, getProfileNumber } from './data/profile/numbers.js'
+import { getProfileStringArray } from './data/profile/string-arrays.js'
+import { getProfileString, getProfileStringForProfileKey } from './data/profile/strings.js'
 
 export const group = {
-	get: getConfig,
-	getBoolean: getConfigBoolean,
-	getFloat: getConfigFloat,
-	getInt: getConfigInt,
-	getJson: getConfigJson,
-	getKeys: getConfigKeys,
-	getNumber: getConfigNumber,
-	getNumberArray: getConfigNumberArray,
-	getString: getConfigString,
-	getStringArray: getConfigStringArray,
+	get: getGroupValue,
+	getBoolean: getGroupBoolean,
+	getFloat: getGroupFloat,
+	getInt: getGroupInt,
+	getJson: getGroupJson,
+	getKeys: getGroupKeys,
+	getNumber: getGroupNumber,
+	getNumberArray: getGroupNumberArray,
+	getString: getGroupString,
+	getStringArray: getGroupStringArray,
 	logSummary: logGroupConfigSummary,
-	send: sendConfig,
-	set: setConfig,
-	setBoolean: setConfigBoolean,
-	setJson: setConfigJson,
-	setNumber: setConfigNumber,
-	setNumberArray: setConfigNumberArray,
-	setString: setConfigString,
-	setStringArray: setConfigStringArray,
-	unset: unsetConfig,
+	send: syncConfig,
+	set: setGroupValue,
+	unset: unsetGroupValue,
 }
 
 export const profile = {
-	get: getProfileConfig,
+	get: getProfileValue,
 	getBoolean: getProfileBoolean,
 	getBooleanForProfileKey: getProfileBooleanForProfileKey,
 	getConfigKeys: getProfileConfigKeys,
@@ -80,19 +51,12 @@ export const profile = {
 	getStringArray: getProfileStringArray,
 	getStringForProfileKey: getProfileStringForProfileKey,
 	logSummary: logProfileConfigSummary,
-	set: setProfileConfig,
-	setBoolean: setProfileBoolean,
-	setBooleanForProfileKey: setProfileBooleanForProfileKey,
-	setJson: setProfileJson,
-	setNumber: setProfileNumber,
-	setNumberArray: setProfileNumberArray,
-	setNumberForProfileKey: setProfileNumberForProfileKey,
-	setString: setProfileString,
-	setStringArray: setProfileStringArray,
-	setStringForProfileKey: setProfileStringForProfileKey,
-	unset: unsetProfileConfig,
+	set: setProfileValue,
+	unset: unsetProfileValue,
 }
 
 export { createConfigScope, logConfigValues } from './data/config-scope.js'
 export type { ConfigScope, ConfigScopeMode, ConfigScopeOptions, LogConfigValuesOptions } from './data/config-scope.js'
 export type { ConfigWriteOptions } from './data/shared/types.js'
+export { getStoredBoolean, getStoredInt, getStoredString, setStoredBoolean, setStoredInt, setStoredString } from './data/storage.js'
+export type { RsProfileStorage } from './data/storage.js'
