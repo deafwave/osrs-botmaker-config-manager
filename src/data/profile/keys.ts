@@ -1,4 +1,4 @@
-import { getConfigKeys } from '../group/keys.js'
+import { getGroupKeys } from '../group/keys.js'
 import { RS_PROFILE_GROUP_SEGMENT, buildProfileGroupName, extractProfileKeyFromConfigKey } from '../shared/profile-group.js'
 
 export const getProfileKey = (): string => configManager.getRSProfileKey()
@@ -7,7 +7,7 @@ export const getProfileGroupName = (groupName: string, profileKey: string): stri
 
 export const getProfileKeysForGroup = (groupName: string): string[] => {
 	const prefix = `${groupName}${RS_PROFILE_GROUP_SEGMENT}`
-	const keys = getConfigKeys(prefix)
+	const keys = getGroupKeys(prefix)
 	const profileKeys = new Set<string>()
 	keys.forEach((fullKey) => {
 		const profileKey = extractProfileKeyFromConfigKey(fullKey, prefix)
@@ -20,7 +20,7 @@ export const getProfileKeysForGroup = (groupName: string): string[] => {
 
 export const logProfileConfigSummary = (groupName: string): void => {
 	const prefix = `${groupName}${RS_PROFILE_GROUP_SEGMENT}`
-	const keys = getConfigKeys(prefix)
+	const keys = getGroupKeys(prefix)
 	if (keys.length === 0) {
 		bot.printLogMessage(`No profile-scoped config keys found for group '${groupName}'.`)
 		return

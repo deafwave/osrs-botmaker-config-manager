@@ -1,4 +1,7 @@
 import { createJsonAccessors } from '../shared/accessors.js'
-import { getConfigString, setConfigString } from './strings.js'
+import { getGroupRawValue, setGroupString } from './strings.js'
 
-export const { getJson: getConfigJson, setJson: setConfigJson } = createJsonAccessors(getConfigString, setConfigString)
+const jsonAccessors = createJsonAccessors(getGroupRawValue, setGroupString)
+
+export const getGroupJson = jsonAccessors.getJson
+export const setGroupJson = jsonAccessors.setJson

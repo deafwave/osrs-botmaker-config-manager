@@ -1,23 +1,25 @@
-import { getConfigBoolean, setConfigBoolean } from './group/booleans.js'
-import { getConfigJson, setConfigJson } from './group/json.js'
-import { getConfigKeys, unsetConfig } from './group/keys.js'
-import { getConfigNumberArray, setConfigNumberArray } from './group/number-arrays.js'
-import { getConfigFloat, getConfigInt, getConfigNumber, setConfigNumber } from './group/numbers.js'
-import { getConfigStringArray, setConfigStringArray } from './group/string-arrays.js'
-import { getConfigString, setConfigString } from './group/strings.js'
-import { getProfileBoolean, getProfileBooleanForProfileKey, setProfileBoolean, setProfileBooleanForProfileKey } from './profile/booleans.js'
-import { getProfileJson, setProfileJson } from './profile/json.js'
+import { setGroupValue } from './group/aliases.js'
+import { getGroupBoolean } from './group/booleans.js'
+import { getGroupJson } from './group/json.js'
+import { getGroupKeys, unsetGroupValue } from './group/keys.js'
+import { getGroupNumberArray } from './group/number-arrays.js'
+import { getGroupFloat, getGroupInt, getGroupNumber } from './group/numbers.js'
+import { getGroupStringArray } from './group/string-arrays.js'
+import { getGroupString } from './group/strings.js'
+import { getProfileBoolean, getProfileBooleanForProfileKey } from './profile/booleans.js'
+import { setProfileValue, unsetProfileValue } from './profile/config.js'
+import { getProfileJson } from './profile/json.js'
 import { getProfileConfigKeys, getProfileKey } from './profile/keys.js'
-import { getProfileNumberArray, setProfileNumberArray } from './profile/number-arrays.js'
-import { getProfileFloat, getProfileInt, getProfileIntForProfileKey, getProfileNumber, setProfileNumber, setProfileNumberForProfileKey } from './profile/numbers.js'
-import { getProfileStringArray, setProfileStringArray } from './profile/string-arrays.js'
-import { getProfileString, getProfileStringForProfileKey, setProfileString, setProfileStringForProfileKey } from './profile/strings.js'
-import { unsetProfileConfig } from './profile/config.js'
+import { getProfileNumberArray } from './profile/number-arrays.js'
+import { getProfileFloat, getProfileInt, getProfileIntForProfileKey, getProfileNumber } from './profile/numbers.js'
+import { getProfileStringArray } from './profile/string-arrays.js'
+import { getProfileString, getProfileStringForProfileKey } from './profile/strings.js'
 import type { ConfigWriteOptions } from './shared/types.js'
 import { parseFloatNumber, parseNumber } from './shared/parse-number.js'
 import { buildProfileGroupName } from './shared/profile-group.js'
 import { splitCsv } from './shared/split-csv.js'
-import { parseStringArrayValue } from './shared/string-array-codec.js'
+import { isNumberArray, parseStoredData } from './shared/storage.js'
+import { parseStringArrayValue } from './shared/string-array.js'
 
 export type ConfigScopeMode = 'group' | 'profile'
 
@@ -40,24 +42,79 @@ export type ConfigScope = {
 	getAllValues: (keyPrefix?: string) => Record<string, string>
 	logAllValues: (action: string, keyPrefix?: string) => Record<string, string>
 	getString: (key: string, fallback?: string) => string
-	setString: (key: string, value: string, options?: ConfigWriteOptions) => void
+	set: (key: string, value: unknown, options?: ConfigWriteOptions) => void
 	getNumber: (key: string, fallback?: number) => number
-	setNumber: (key: string, value: number, options?: ConfigWriteOptions) => void
 	getInt: (key: string, fallback?: number) => number
-	setInt: (key: string, value: number, options?: ConfigWriteOptions) => void
 	getFloat: (key: string, fallback?: number) => number
 	getBoolean: (key: string, fallback?: boolean) => boolean
-	setBoolean: (key: string, value: boolean, options?: ConfigWriteOptions) => void
 	getStringArray: (key: string, fallback?: string[]) => string[]
-	setStringArray: (key: string, values: string[], options?: ConfigWriteOptions) => void
 	getNumberArray: (key: string, fallback?: number[]) => number[]
-	setNumberArray: (key: string, values: number[], options?: ConfigWriteOptions) => void
 	getJson: <T>(key: string, fallback: T) => T
-	setJson: <T>(key: string, value: T, options?: ConfigWriteOptions) => void
 	unset: (key: string, options?: ConfigWriteOptions) => void
 }
 
 type ConfigKeysLike = { size?: () => number; get?: (index: number) => unknown; length?: number; [index: number]: unknown }
+
+const INVALID_SCOPE_GROUP_ERROR = "Invalid ConfigScopeOptions: 'group' must be a non-empty string."
+const INVALID_SCOPE_PROFILE_KEY_ERROR = "Invalid ConfigScopeOptions: 'profileKey' must be a non-empty string when provided."
+const PROFILE_KEY_WITH_GROUP_SCOPE_ERROR = "Invalid ConfigScopeOptions: 'profileKey' cannot be used when scope is 'group'."
+const INVALID_SCOPE_MODE_ERROR = "Invalid ConfigScopeOptions: 'scope' must be either 'group' or 'profile'."
+const INVALID_SYNC_DEFAULT_ERROR = "Invalid ConfigScopeOptions: 'syncDefault' must be a boolean when provided."
+const ERROR = 'Invalid ConfigScopeOptions.'
+
+const logAndThrowTypeError = (message: string): never => {
+	log.printColor(message, java.awt.Color.RED)
+	throw new TypeError(ERROR)
+}
+
+const parseConfigScopeMode = (value: unknown): ConfigScopeMode => {
+	if (value === 'group' || value === 'profile') {
+		return value
+	}
+	return logAndThrowTypeError(INVALID_SCOPE_MODE_ERROR)
+}
+
+const parseOptionalProfileKey = (profileKey: unknown): string | undefined => {
+	if (profileKey === undefined) {
+		return undefined
+	}
+
+	if (typeof profileKey !== 'string') {
+		return logAndThrowTypeError(INVALID_SCOPE_PROFILE_KEY_ERROR)
+	}
+
+	const trimmed = profileKey.trim()
+	if (!trimmed) {
+		return logAndThrowTypeError(INVALID_SCOPE_PROFILE_KEY_ERROR)
+	}
+
+	return trimmed
+}
+
+const parseGroupName = (group: unknown): string => {
+	if (typeof group !== 'string') {
+		return logAndThrowTypeError(INVALID_SCOPE_GROUP_ERROR)
+	}
+
+	const trimmed = group.trim()
+	if (!trimmed) {
+		return logAndThrowTypeError(INVALID_SCOPE_GROUP_ERROR)
+	}
+
+	return trimmed
+}
+
+const parseSyncDefault = (syncDefault: unknown): boolean | undefined => {
+	if (syncDefault === undefined) {
+		return undefined
+	}
+
+	if (typeof syncDefault !== 'boolean') {
+		return logAndThrowTypeError(INVALID_SYNC_DEFAULT_ERROR)
+	}
+
+	return syncDefault
+}
 
 const withSyncDefault = (syncDefault: boolean | undefined, options?: ConfigWriteOptions): ConfigWriteOptions | undefined => {
 	if (options?.sync !== undefined) {
@@ -72,6 +129,11 @@ const withSyncDefault = (syncDefault: boolean | undefined, options?: ConfigWrite
 }
 
 const parseNumberArrayFromString = (value: string, fallback: number[]): number[] => {
+	const parsed = parseStoredData(value)
+	if (parsed.ok && isNumberArray(parsed.value)) {
+		return parsed.value
+	}
+
 	if (!value.trim()) {
 		return fallback
 	}
@@ -88,11 +150,12 @@ const parseJsonFromString = <T>(value: string, fallback: T): T => {
 		return fallback
 	}
 
-	try {
-		return JSON.parse(value) as T
-	} catch {
+	const parsed = parseStoredData(value)
+	if (!parsed.ok) {
 		return fallback
 	}
+
+	return parsed.value as T
 }
 
 const toKeyArray = (keys: unknown): string[] => {
@@ -129,8 +192,14 @@ export const logConfigValues = ({ action, group, getAllValues, keyPrefix = '' }:
 }
 
 export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
-	const { group, profileKey, syncDefault } = options
-	const scope = options.scope ?? 'profile'
+	const group = parseGroupName(options.group)
+	const scope = parseConfigScopeMode(options.scope ?? 'profile')
+	const profileKey = parseOptionalProfileKey(options.profileKey)
+	const syncDefault = parseSyncDefault(options.syncDefault)
+	if (scope === 'group' && profileKey !== undefined) {
+		logAndThrowTypeError(PROFILE_KEY_WITH_GROUP_SCOPE_ERROR)
+	}
+
 	const groupKeyPrefix = `${group}.`
 	const profileGroupName = profileKey ? buildProfileGroupName(group, profileKey) : null
 	const profileGroupKeyPrefix = profileGroupName ? `${profileGroupName}.` : null
@@ -138,7 +207,7 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 
 	const getString = (key: string, fallback = ''): string => {
 		if (scope === 'group') {
-			return getConfigString(group, key, fallback)
+			return getGroupString(group, key, fallback)
 		}
 
 		if (profileKey) {
@@ -153,12 +222,12 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 		let prefixToTrim = groupKeyPrefix
 
 		if (scope === 'group') {
-			fullKeys = toKeyArray(getConfigKeys(groupKeyPrefix))
+			fullKeys = toKeyArray(getGroupKeys(groupKeyPrefix))
 		} else if (profileGroupName && profileGroupKeyPrefix) {
 			if (usesActiveProfile()) {
 				fullKeys = toKeyArray(getProfileConfigKeys(group, keyPrefix))
 			} else {
-				fullKeys = toKeyArray(getConfigKeys(profileGroupKeyPrefix))
+				fullKeys = toKeyArray(getGroupKeys(profileGroupKeyPrefix))
 				prefixToTrim = profileGroupKeyPrefix
 			}
 		} else {
@@ -184,25 +253,30 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 
 	const logAllValues = (action: string, keyPrefix = ''): Record<string, string> => logConfigValues({ action, group, getAllValues, keyPrefix })
 
-	const setString = (key: string, value: string, writeOptions?: ConfigWriteOptions): void => {
+	const set = (key: string, value: unknown, writeOptions?: ConfigWriteOptions): void => {
 		const resolvedOptions = withSyncDefault(syncDefault, writeOptions)
 
 		if (scope === 'group') {
-			setConfigString(group, key, value, resolvedOptions)
+			setGroupValue(group, key, value, resolvedOptions)
 			return
 		}
 
 		if (profileKey) {
-			setProfileStringForProfileKey(group, profileKey, key, value, resolvedOptions)
+			if (usesActiveProfile()) {
+				setProfileValue(group, key, value, resolvedOptions)
+				return
+			}
+
+			setGroupValue(buildProfileGroupName(group, profileKey), key, value, resolvedOptions)
 			return
 		}
 
-		setProfileString(group, key, value, resolvedOptions)
+		setProfileValue(group, key, value, resolvedOptions)
 	}
 
 	const getNumber = (key: string, fallback = 0): number => {
 		if (scope === 'group') {
-			return getConfigNumber(group, key, fallback)
+			return getGroupNumber(group, key, fallback)
 		}
 
 		if (profileKey) {
@@ -213,25 +287,9 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 		return getProfileNumber(group, key, fallback)
 	}
 
-	const setNumber = (key: string, value: number, writeOptions?: ConfigWriteOptions): void => {
-		const resolvedOptions = withSyncDefault(syncDefault, writeOptions)
-
-		if (scope === 'group') {
-			setConfigNumber(group, key, value, resolvedOptions)
-			return
-		}
-
-		if (profileKey) {
-			setProfileNumberForProfileKey(group, profileKey, key, value, resolvedOptions)
-			return
-		}
-
-		setProfileNumber(group, key, value, resolvedOptions)
-	}
-
 	const getInt = (key: string, fallback = 0): number => {
 		if (scope === 'group') {
-			return getConfigInt(group, key, fallback)
+			return getGroupInt(group, key, fallback)
 		}
 
 		if (profileKey) {
@@ -241,13 +299,9 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 		return getProfileInt(group, key, fallback)
 	}
 
-	const setInt = (key: string, value: number, writeOptions?: ConfigWriteOptions): void => {
-		setNumber(key, value, writeOptions)
-	}
-
 	const getFloat = (key: string, fallback = 0): number => {
 		if (scope === 'group') {
-			return getConfigFloat(group, key, fallback)
+			return getGroupFloat(group, key, fallback)
 		}
 
 		if (profileKey) {
@@ -260,7 +314,7 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 
 	const getBoolean = (key: string, fallback = false): boolean => {
 		if (scope === 'group') {
-			return getConfigBoolean(group, key, fallback)
+			return getGroupBoolean(group, key, fallback)
 		}
 
 		if (profileKey) {
@@ -270,25 +324,9 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 		return getProfileBoolean(group, key, fallback)
 	}
 
-	const setBoolean = (key: string, value: boolean, writeOptions?: ConfigWriteOptions): void => {
-		const resolvedOptions = withSyncDefault(syncDefault, writeOptions)
-
-		if (scope === 'group') {
-			setConfigBoolean(group, key, value, resolvedOptions)
-			return
-		}
-
-		if (profileKey) {
-			setProfileBooleanForProfileKey(group, profileKey, key, value, resolvedOptions)
-			return
-		}
-
-		setProfileBoolean(group, key, value, resolvedOptions)
-	}
-
 	const getStringArray = (key: string, fallback: string[] = []): string[] => {
 		if (scope === 'group') {
-			return getConfigStringArray(group, key, fallback)
+			return getGroupStringArray(group, key, fallback)
 		}
 
 		if (profileKey) {
@@ -303,25 +341,9 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 		return getProfileStringArray(group, key, fallback)
 	}
 
-	const setStringArray = (key: string, values: string[], writeOptions?: ConfigWriteOptions): void => {
-		const resolvedOptions = withSyncDefault(syncDefault, writeOptions)
-
-		if (scope === 'group') {
-			setConfigStringArray(group, key, values, resolvedOptions)
-			return
-		}
-
-		if (profileKey) {
-			setString(key, JSON.stringify(values), resolvedOptions)
-			return
-		}
-
-		setProfileStringArray(group, key, values, resolvedOptions)
-	}
-
 	const getNumberArray = (key: string, fallback: number[] = []): number[] => {
 		if (scope === 'group') {
-			return getConfigNumberArray(group, key, fallback)
+			return getGroupNumberArray(group, key, fallback)
 		}
 
 		if (profileKey) {
@@ -331,25 +353,9 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 		return getProfileNumberArray(group, key, fallback)
 	}
 
-	const setNumberArray = (key: string, values: number[], writeOptions?: ConfigWriteOptions): void => {
-		const resolvedOptions = withSyncDefault(syncDefault, writeOptions)
-
-		if (scope === 'group') {
-			setConfigNumberArray(group, key, values, resolvedOptions)
-			return
-		}
-
-		if (profileKey) {
-			setString(key, values.join(','), resolvedOptions)
-			return
-		}
-
-		setProfileNumberArray(group, key, values, resolvedOptions)
-	}
-
 	const getJson = <T>(key: string, fallback: T): T => {
 		if (scope === 'group') {
-			return getConfigJson(group, key, fallback)
+			return getGroupJson(group, key, fallback)
 		}
 
 		if (profileKey) {
@@ -359,40 +365,24 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 		return getProfileJson(group, key, fallback)
 	}
 
-	const setJson = <T>(key: string, value: T, writeOptions?: ConfigWriteOptions): void => {
-		const resolvedOptions = withSyncDefault(syncDefault, writeOptions)
-
-		if (scope === 'group') {
-			setConfigJson(group, key, value, resolvedOptions)
-			return
-		}
-
-		if (profileKey) {
-			setString(key, JSON.stringify(value), resolvedOptions)
-			return
-		}
-
-		setProfileJson(group, key, value, resolvedOptions)
-	}
-
 	const unset = (key: string, writeOptions?: ConfigWriteOptions): void => {
 		const resolvedOptions = withSyncDefault(syncDefault, writeOptions)
 
 		if (scope === 'group') {
-			unsetConfig(group, key, resolvedOptions)
+			unsetGroupValue(group, key, resolvedOptions)
 			return
 		}
 
 		if (profileKey) {
 			if (usesActiveProfile()) {
-				unsetProfileConfig(group, key, resolvedOptions)
+				unsetProfileValue(group, key, resolvedOptions)
 				return
 			}
-			unsetConfig(buildProfileGroupName(group, profileKey), key, resolvedOptions)
+			unsetGroupValue(buildProfileGroupName(group, profileKey), key, resolvedOptions)
 			return
 		}
 
-		unsetProfileConfig(group, key, resolvedOptions)
+		unsetProfileValue(group, key, resolvedOptions)
 	}
 
 	return {
@@ -400,20 +390,14 @@ export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
 		getAllValues,
 		logAllValues,
 		getString,
-		setString,
+		set,
 		getNumber,
-		setNumber,
 		getInt,
-		setInt,
 		getFloat,
 		getBoolean,
-		setBoolean,
 		getStringArray,
-		setStringArray,
 		getNumberArray,
-		setNumberArray,
 		getJson,
-		setJson,
 		unset,
 	}
 }
