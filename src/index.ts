@@ -1,7 +1,7 @@
 import { getGroupValue, setGroupValue } from './data/group/aliases.js'
 import { getGroupBoolean } from './data/group/booleans.js'
 import { getGroupJson } from './data/group/json.js'
-import { getGroupKeys, syncConfig, unsetGroupValue } from './data/group/keys.js'
+import { getGroupKeys, unsetGroupValue } from './data/group/keys.js'
 import { getGroupNumberArray } from './data/group/number-arrays.js'
 import { getGroupFloat, getGroupInt, getGroupNumber } from './data/group/numbers.js'
 import { getGroupStringArray } from './data/group/string-arrays.js'
@@ -28,7 +28,6 @@ export const group = {
 	getString: getGroupString,
 	getStringArray: getGroupStringArray,
 	logSummary: logGroupConfigSummary,
-	send: syncConfig,
 	set: setGroupValue,
 	unset: unsetGroupValue,
 }
@@ -55,6 +54,7 @@ export const profile = {
 	unset: unsetProfileValue,
 }
 
+export { sendConfig } from './data/group/keys.js'
 export { createConfigScope, logConfigValues } from './data/config-scope.js'
 export type { ConfigScope, ConfigScopeMode, ConfigScopeOptions, LogConfigValuesOptions } from './data/config-scope.js'
 export type { ConfigWriteOptions } from './data/shared/types.js'

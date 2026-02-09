@@ -9,6 +9,6 @@ export const unsetGroupValue = (groupName: string, key: string, options?: Config
 
 export const getGroupKeys = (prefix: string): string[] => configManager.getConfigurationKeys(prefix) as string[]
 
-export const syncConfig = (): void => {
+export const sendConfig = (): void => {
 	configManager.sendConfig()
 }
