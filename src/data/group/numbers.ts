@@ -1,9 +1,9 @@
 import { createNumberAccessors } from '../shared/accessors.js'
-import { getConfigString, setConfigString } from './strings.js'
+import { getGroupString, setGroupString } from './strings.js'
 
-export const {
-	getNumber: getConfigNumber,
-	getInt: getConfigInt,
-	getFloat: getConfigFloat,
-	setNumber: setConfigNumber,
-} = createNumberAccessors(getConfigString, setConfigString)
+const numberAccessors = createNumberAccessors(getGroupString, setGroupString)
+
+export const getGroupNumber = numberAccessors.getNumber
+export const getGroupInt = numberAccessors.getInt
+export const getGroupFloat = numberAccessors.getFloat
+export const setGroupNumber = numberAccessors.setNumber

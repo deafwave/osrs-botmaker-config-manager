@@ -1,12 +1,7 @@
-import type { ConfigWriteOptions } from '../shared/types.js'
-import { parseBoolean } from '../shared/parse-boolean.js'
-import { getConfigString, setConfigString } from './strings.js'
+import { createBooleanAccessors } from '../shared/accessors.js'
+import { getGroupString, setGroupString } from './strings.js'
 
-export const getConfigBoolean = (groupName: string, key: string, fallback = false): boolean => {
-	const rawValue = getConfigString(groupName, key, '')
-	return parseBoolean(rawValue, fallback)
-}
+const booleanAccessors = createBooleanAccessors(getGroupString, setGroupString)
 
-export const setConfigBoolean = (groupName: string, key: string, value: boolean, options?: ConfigWriteOptions): void => {
-	setConfigString(groupName, key, value ? 'true' : 'false', options)
-}
+export const getGroupBoolean = booleanAccessors.getBoolean
+export const setGroupBoolean = booleanAccessors.setBoolean
