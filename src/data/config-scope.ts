@@ -19,7 +19,7 @@ import { parseFloatNumber, parseNumber } from './shared/parse-number.js'
 import { buildProfileGroupName } from './shared/profile-group.js'
 import { splitCsv } from './shared/split-csv.js'
 import { isNumberArray, parseStoredData } from './shared/storage.js'
-import { parseStringArrayValue } from './shared/string-array-codec.js'
+import { parseStringArrayValue } from './shared/string-array.js'
 
 export type ConfigScopeMode = 'group' | 'profile'
 
@@ -54,6 +54,67 @@ export type ConfigScope = {
 }
 
 type ConfigKeysLike = { size?: () => number; get?: (index: number) => unknown; length?: number; [index: number]: unknown }
+
+const INVALID_SCOPE_GROUP_ERROR = "Invalid ConfigScopeOptions: 'group' must be a non-empty string."
+const INVALID_SCOPE_PROFILE_KEY_ERROR = "Invalid ConfigScopeOptions: 'profileKey' must be a non-empty string when provided."
+const PROFILE_KEY_WITH_GROUP_SCOPE_ERROR = "Invalid ConfigScopeOptions: 'profileKey' cannot be used when scope is 'group'."
+const INVALID_SCOPE_MODE_ERROR = "Invalid ConfigScopeOptions: 'scope' must be either 'group' or 'profile'."
+const INVALID_SYNC_DEFAULT_ERROR = "Invalid ConfigScopeOptions: 'syncDefault' must be a boolean when provided."
+const ERROR = 'Invalid ConfigScopeOptions.'
+
+const logAndThrowTypeError = (message: string): never => {
+	log.printColor(message, java.awt.Color.RED)
+	throw new TypeError(ERROR)
+}
+
+const parseConfigScopeMode = (value: unknown): ConfigScopeMode => {
+	if (value === 'group' || value === 'profile') {
+		return value
+	}
+	return logAndThrowTypeError(INVALID_SCOPE_MODE_ERROR)
+}
+
+const parseOptionalProfileKey = (profileKey: unknown): string | undefined => {
+	if (profileKey === undefined) {
+		return undefined
+	}
+
+	if (typeof profileKey !== 'string') {
+		return logAndThrowTypeError(INVALID_SCOPE_PROFILE_KEY_ERROR)
+	}
+
+	const trimmed = profileKey.trim()
+	if (!trimmed) {
+		return logAndThrowTypeError(INVALID_SCOPE_PROFILE_KEY_ERROR)
+	}
+
+	return trimmed
+}
+
+const parseGroupName = (group: unknown): string => {
+	if (typeof group !== 'string') {
+		return logAndThrowTypeError(INVALID_SCOPE_GROUP_ERROR)
+	}
+
+	const trimmed = group.trim()
+	if (!trimmed) {
+		return logAndThrowTypeError(INVALID_SCOPE_GROUP_ERROR)
+	}
+
+	return trimmed
+}
+
+const parseSyncDefault = (syncDefault: unknown): boolean | undefined => {
+	if (syncDefault === undefined) {
+		return undefined
+	}
+
+	if (typeof syncDefault !== 'boolean') {
+		return logAndThrowTypeError(INVALID_SYNC_DEFAULT_ERROR)
+	}
+
+	return syncDefault
+}
 
 const withSyncDefault = (syncDefault: boolean | undefined, options?: ConfigWriteOptions): ConfigWriteOptions | undefined => {
 	if (options?.sync !== undefined) {
@@ -131,8 +192,14 @@ export const logConfigValues = ({ action, group, getAllValues, keyPrefix = '' }:
 }
 
 export const createConfigScope = (options: ConfigScopeOptions): ConfigScope => {
-	const { group, profileKey, syncDefault } = options
-	const scope = options.scope ?? 'profile'
+	const group = parseGroupName(options.group)
+	const scope = parseConfigScopeMode(options.scope ?? 'profile')
+	const profileKey = parseOptionalProfileKey(options.profileKey)
+	const syncDefault = parseSyncDefault(options.syncDefault)
+	if (scope === 'group' && profileKey !== undefined) {
+		logAndThrowTypeError(PROFILE_KEY_WITH_GROUP_SCOPE_ERROR)
+	}
+
 	const groupKeyPrefix = `${group}.`
 	const profileGroupName = profileKey ? buildProfileGroupName(group, profileKey) : null
 	const profileGroupKeyPrefix = profileGroupName ? `${profileGroupName}.` : null

@@ -2,7 +2,7 @@ import { parseBoolean } from './parse-boolean.js'
 import { parseFloatNumber, parseIntNumber, parseNumber } from './parse-number.js'
 import { splitCsv } from './split-csv.js'
 import { isNumberArray, parseStoredData, toStoredJson } from './storage.js'
-import { parseStringArrayValue, serializeStringArrayValue } from './string-array-codec.js'
+import { parseStringArrayValue, serializeStringArrayValue } from './string-array.js'
 import type { ConfigWriteOptions } from './types.js'
 
 export type GetStringAccessor = (groupName: string, key: string, fallback?: string) => string
@@ -36,11 +36,7 @@ export type JsonAccessors = {
 	setJson: <T>(groupName: string, key: string, value: T, options?: ConfigWriteOptions) => void
 }
 
-export const parseStoredNumberWith = (
-	rawValue: string,
-	fallback: number,
-	parser: (value: string) => number | null,
-): number => {
+export const parseStoredNumberWith = (rawValue: string, fallback: number, parser: (value: string) => number | null): number => {
 	const parsed = parseStoredData(rawValue)
 	if (parsed.ok && typeof parsed.value === 'number' && Number.isFinite(parsed.value)) {
 		const parsedNumber = parser(String(parsed.value))
@@ -96,40 +92,29 @@ export const parseStoredJson = <T>(rawValue: string, fallback: T): T => {
 }
 
 export const createNumberAccessors = (getString: GetStringAccessor, setString: SetStringAccessor): NumberAccessors => ({
-	getNumber: (groupName: string, key: string, fallback = 0): number =>
-		parseStoredNumberWith(getString(groupName, key, ''), fallback, parseNumber),
-	getInt: (groupName: string, key: string, fallback = 0): number =>
-		parseStoredNumberWith(getString(groupName, key, ''), fallback, parseIntNumber),
-	getFloat: (groupName: string, key: string, fallback = 0): number =>
-		parseStoredNumberWith(getString(groupName, key, ''), fallback, parseFloatNumber),
+	getNumber: (groupName: string, key: string, fallback = 0): number => parseStoredNumberWith(getString(groupName, key, ''), fallback, parseNumber),
+	getInt: (groupName: string, key: string, fallback = 0): number => parseStoredNumberWith(getString(groupName, key, ''), fallback, parseIntNumber),
+	getFloat: (groupName: string, key: string, fallback = 0): number => parseStoredNumberWith(getString(groupName, key, ''), fallback, parseFloatNumber),
 	setNumber: (groupName: string, key: string, value: number, options?: ConfigWriteOptions): void => {
 		setString(groupName, key, toStoredJson(value), options)
 	},
 })
 
 export const createBooleanAccessors = (getString: GetStringAccessor, setString: SetStringAccessor): BooleanAccessors => ({
-	getBoolean: (groupName: string, key: string, fallback = false): boolean =>
-		parseStoredBoolean(getString(groupName, key, ''), fallback),
+	getBoolean: (groupName: string, key: string, fallback = false): boolean => parseStoredBoolean(getString(groupName, key, ''), fallback),
 	setBoolean: (groupName: string, key: string, value: boolean, options?: ConfigWriteOptions): void => {
 		setString(groupName, key, value ? 'true' : 'false', options)
 	},
 })
 
-export const createNumberArrayAccessors = (
-	getString: GetStringAccessor,
-	setString: SetStringAccessor,
-): NumberArrayAccessors => ({
-	getNumberArray: (groupName: string, key: string, fallback: number[] = []): number[] =>
-		parseStoredNumberArray(getString(groupName, key, ''), fallback),
+export const createNumberArrayAccessors = (getString: GetStringAccessor, setString: SetStringAccessor): NumberArrayAccessors => ({
+	getNumberArray: (groupName: string, key: string, fallback: number[] = []): number[] => parseStoredNumberArray(getString(groupName, key, ''), fallback),
 	setNumberArray: (groupName: string, key: string, values: number[], options?: ConfigWriteOptions): void => {
 		setString(groupName, key, toStoredJson(values), options)
 	},
 })
 
-export const createStringArrayAccessors = (
-	getString: GetStringAccessor,
-	setString: SetStringAccessor,
-): StringArrayAccessors => ({
+export const createStringArrayAccessors = (getString: GetStringAccessor, setString: SetStringAccessor): StringArrayAccessors => ({
 	getStringArray: (groupName: string, key: string, fallback: string[] = []): string[] => {
 		const rawValue = getString(groupName, key, '')
 		if (!rawValue.trim()) {

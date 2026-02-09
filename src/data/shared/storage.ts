@@ -17,9 +17,11 @@ const safeParseJson = (value: string): ParseOutcome => {
 	}
 }
 
-const stripTrailingCommas = (value: string): string => value.replaceAll(TRAILING_COMMA_REGEX, '$1')
+// eslint-disable-next-line unicorn/prefer-string-replace-all -- NEEDED DO NOT CHANGE
+const stripTrailingCommas = (value: string): string => value.replace(TRAILING_COMMA_REGEX, '$1')
 
-const unescapeColons = (value: string): string => value.replaceAll(ESCAPED_COLON_REGEX, ':')
+// eslint-disable-next-line unicorn/prefer-string-replace-all -- NEEDED DO NOT CHANGE
+const unescapeColons = (value: string): string => value.replace(ESCAPED_COLON_REGEX, ':')
 
 const buildCandidates = (rawValue: string): string[] => {
 	const candidates = [rawValue, unescapeColons(rawValue), stripTrailingCommas(rawValue), stripTrailingCommas(unescapeColons(rawValue))]

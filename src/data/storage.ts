@@ -9,7 +9,19 @@ export type RsProfileStorage = {
 	scope?: 'profile' | 'group'
 }
 
-const hasProfileStorage = (storage?: RsProfileStorage): storage is RsProfileStorage => typeof storage?.group === 'string' && storage.group.trim().length > 0
+const INVALID_STORAGE_GROUP_ERROR = "Invalid RsProfileStorage: 'group' must be a non-empty string when storage is provided."
+
+const resolveStorage = (storage: RsProfileStorage | undefined): RsProfileStorage | undefined => {
+	if (storage === undefined) {
+		return undefined
+	}
+
+	if (typeof storage.group !== 'string' || storage.group.trim().length === 0) {
+		throw new TypeError(INVALID_STORAGE_GROUP_ERROR)
+	}
+
+	return storage
+}
 
 const getScope = (storage: RsProfileStorage) =>
 	createConfigScope({
@@ -20,16 +32,18 @@ const getScope = (storage: RsProfileStorage) =>
 	})
 
 export const getStoredString = (storage: RsProfileStorage | undefined, key: string, fallback: string): string => {
-	if (hasProfileStorage(storage)) {
-		return getScope(storage).getString(key, fallback)
+	const validStorage = resolveStorage(storage)
+	if (validStorage) {
+		return getScope(validStorage).getString(key, fallback)
 	}
 
 	return bot.bmCache.getString(key, fallback)
 }
 
 export const setStoredString = (storage: RsProfileStorage | undefined, key: string, value: string): void => {
-	if (hasProfileStorage(storage)) {
-		getScope(storage).set(key, value)
+	const validStorage = resolveStorage(storage)
+	if (validStorage) {
+		getScope(validStorage).set(key, value)
 		return
 	}
 
@@ -37,16 +51,18 @@ export const setStoredString = (storage: RsProfileStorage | undefined, key: stri
 }
 
 export const getStoredInt = (storage: RsProfileStorage | undefined, key: string, fallback: number): number => {
-	if (hasProfileStorage(storage)) {
-		return getScope(storage).getInt(key, fallback)
+	const validStorage = resolveStorage(storage)
+	if (validStorage) {
+		return getScope(validStorage).getInt(key, fallback)
 	}
 
 	return bot.bmCache.getInt(key, fallback)
 }
 
 export const setStoredInt = (storage: RsProfileStorage | undefined, key: string, value: number): void => {
-	if (hasProfileStorage(storage)) {
-		getScope(storage).set(key, value)
+	const validStorage = resolveStorage(storage)
+	if (validStorage) {
+		getScope(validStorage).set(key, value)
 		return
 	}
 
@@ -54,16 +70,18 @@ export const setStoredInt = (storage: RsProfileStorage | undefined, key: string,
 }
 
 export const getStoredBoolean = (storage: RsProfileStorage | undefined, key: string, fallback: boolean): boolean => {
-	if (hasProfileStorage(storage)) {
-		return getScope(storage).getBoolean(key, fallback)
+	const validStorage = resolveStorage(storage)
+	if (validStorage) {
+		return getScope(validStorage).getBoolean(key, fallback)
 	}
 
 	return bot.bmCache.getBoolean(key, fallback)
 }
 
 export const setStoredBoolean = (storage: RsProfileStorage | undefined, key: string, value: boolean): void => {
-	if (hasProfileStorage(storage)) {
-		getScope(storage).set(key, value)
+	const validStorage = resolveStorage(storage)
+	if (validStorage) {
+		getScope(validStorage).set(key, value)
 		return
 	}
 
