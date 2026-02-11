@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@deafwave/osrs-botmaker-types':
-        specifier: ^0.7.32
-        version: 0.7.33
+        specifier: ^0.7.34
+        version: 0.7.34
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^2.1.1
@@ -270,8 +270,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@deafwave/osrs-botmaker-types@0.7.33':
-    resolution: {integrity: sha512-a8/DJ+1gPXJX5JYKTvxuei3ojl5NlJjse3slqH0/fSikcIg7GRq+Kf8W0WuvE6sn6EFYYANDFqziq/YOvLWYSQ==, tarball: https://npm.pkg.github.com/download/@deafwave/osrs-botmaker-types/0.7.33/d93a8340ca40ab286acdcf981d0488479555064d}
+  '@deafwave/osrs-botmaker-types@0.7.34':
+    resolution: {integrity: sha512-CNlq0Qq8tDy3bP4eb3bTHJuA0qil+IDCJstoBuxjLAYm7n0EwdjQDfJeHUoYNGVUgYmKjL0MHWmsZqWc02PjXA==, tarball: https://npm.pkg.github.com/download/@deafwave/osrs-botmaker-types/0.7.34/0634f4d8225f83dfb17648c945996cb1d8681441}
 
   '@emnapi/core@1.8.1':
     resolution: {integrity: sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg==}
@@ -3091,7 +3091,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@deafwave/osrs-botmaker-types@0.7.33': {}
+  '@deafwave/osrs-botmaker-types@0.7.34': {}
 
   '@emnapi/core@1.8.1':
     dependencies:
