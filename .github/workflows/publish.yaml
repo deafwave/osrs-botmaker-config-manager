@@ -167,6 +167,6 @@ jobs:
       - name: 🚀 Publish to GitHub Packages
         run: |
           npm pkg set publishConfig.registry="https://npm.pkg.github.com"
-          pnpm publish --no-git-checks
+          pnpm publish --no-git-checks --registry https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
