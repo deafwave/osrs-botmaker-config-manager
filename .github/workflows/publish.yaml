@@ -53,7 +53,6 @@ jobs:
         shell: bash
         run: |
           npm config set //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN" --location=user
-          npm config set //npm.pkg.github.com/:always-auth true --location=user
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -119,7 +118,6 @@ jobs:
         shell: bash
         run: |
           npm config set //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN" --location=user
-          npm config set //npm.pkg.github.com/:always-auth true --location=user
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
