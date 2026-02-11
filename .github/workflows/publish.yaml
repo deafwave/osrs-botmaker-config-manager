@@ -82,22 +82,6 @@ jobs:
           pnpm i
           pnpm build
 
-      - name: Omit storage exports for npm package
-        shell: bash
-        run: |
-          sed -i "/export { getStoredBoolean, getStoredInt, getStoredString, setStoredBoolean, setStoredInt, setStoredString } from '.\/data\/storage.js';/d" dist/index.js dist/index.d.ts
-          sed -i "/export type { RsProfileStorage } from '.\/data\/storage.js';/d" dist/index.d.ts
-
-          if grep -Fq "export { getStoredBoolean, getStoredInt, getStoredString, setStoredBoolean, setStoredInt, setStoredString } from './data/storage.js';" dist/index.js || grep -Fq "export { getStoredBoolean, getStoredInt, getStoredString, setStoredBoolean, setStoredInt, setStoredString } from './data/storage.js';" dist/index.d.ts; then
-            echo "Storage exports are still present in npm artifacts."
-            exit 1
-          fi
-
-          if grep -Fq "export type { RsProfileStorage } from './data/storage.js';" dist/index.d.ts; then
-            echo "RsProfileStorage root export is still present in npm artifacts."
-            exit 1
-          fi
-
       - name: Force npmjs registry for @deafwave scope
         shell: bash
         run: |
@@ -105,6 +89,17 @@ jobs:
           npm config set registry https://registry.npmjs.org --location=project
           npm config get @deafwave:registry
           npm config get registry
+
+      - name: Set npm entrypoint exports
+        shell: bash
+        run: |
+          npm pkg set main="./dist/index.npm.js"
+          npm pkg set types="./dist/index.npm.d.ts"
+          npm pkg set "exports[.].types=./dist/index.npm.d.ts"
+          npm pkg set "exports[.].default=./dist/index.npm.js"
+          npm pkg get main
+          npm pkg get types
+          npm pkg get exports
 
       - name: 🚀 Publish to npm
         run: pnpm publish --no-git-checks --access public --registry https://registry.npmjs.org
