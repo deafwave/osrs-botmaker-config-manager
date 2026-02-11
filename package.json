@@ -1,9 +1,31 @@
 {
   "name": "@deafwave/osrs-botmaker-config-manager",
   "version": "0.1.9",
+  "author": {
+    "name": "CodySimonds65",
+    "url": "https://github.com/CodySimonds65"
+  },
   "description": "Config manager helpers for osrs-botmaker runtimes",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deafwave/osrs-botmaker-config-manager"
+  },
+  "bugs": {
+    "url": "https://github.com/deafwave/osrs-botmaker-config-manager/issues"
+  },
+  "homepage": "https://github.com/deafwave/osrs-botmaker-config-manager#readme",
+  "contributors": [
+    {
+      "name": "Chandler Ferry",
+      "url": "https://github.com/ChandlerFerry"
+    }
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

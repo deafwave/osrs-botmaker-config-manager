@@ -101,6 +101,13 @@ jobs:
           npm pkg get types
           npm pkg get exports
 
+      - name: Diagnose npm publish config
+        shell: bash
+        run: |
+          npm pkg get name version main types exports publishConfig
+          npm config get registry
+          npm pack --dry-run
+
       - name: 🚀 Publish to npm
         run: pnpm publish --no-git-checks --access public --registry https://registry.npmjs.org
 
@@ -133,6 +140,22 @@ jobs:
         run: |
           pnpm i
           pnpm build
+
+      - name: Prepare GitHub Packages registry
+        shell: bash
+        run: |
+          npm pkg set publishConfig.registry="https://npm.pkg.github.com"
+          npm config set @deafwave:registry https://npm.pkg.github.com --location=project
+          npm config set registry https://npm.pkg.github.com --location=project
+          npm config get @deafwave:registry
+          npm config get registry
+
+      - name: Diagnose GitHub publish config
+        shell: bash
+        run: |
+          npm pkg get name version main types exports publishConfig
+          npm config get registry
+          npm pack --dry-run
 
       - name: 🚀 Publish to GitHub Packages
         run: pnpm publish --no-git-checks --registry https://npm.pkg.github.com
