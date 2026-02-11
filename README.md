@@ -52,3 +52,4 @@ Rejected values throw `TypeError("Config value must be JSON-serializable.")`:
 
 Writes do not call `configManager.sendConfig()` unless sync is enabled.
 - Manual sync: call `sendConfig()` to force sending config.
+
