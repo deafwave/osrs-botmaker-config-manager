@@ -98,6 +98,14 @@ jobs:
             exit 1
           fi
 
+      - name: Force npmjs registry for @deafwave scope
+        shell: bash
+        run: |
+          npm config set @deafwave:registry https://registry.npmjs.org --location=project
+          npm config set registry https://registry.npmjs.org --location=project
+          npm config get @deafwave:registry
+          npm config get registry
+
       - name: 🚀 Publish to npm
         run: pnpm publish --no-git-checks --access public --registry https://registry.npmjs.org
 
