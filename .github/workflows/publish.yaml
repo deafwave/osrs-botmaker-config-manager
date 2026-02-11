@@ -36,6 +36,12 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
 
+      - name: Install & lint
+        if: github.ref_type != 'tag'
+        run: |
+          pnpm i
+          pnpm lint
+
       - name: ⏫ Bumping version
         id: bumping-version
         uses: jpb06/bump-package@latest
