@@ -44,7 +44,7 @@
     "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
-    "@deafwave/osrs-botmaker-types": "^0.7.32"
+    "@deafwave/osrs-botmaker-types": "^0.7.34"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^2.1.1",

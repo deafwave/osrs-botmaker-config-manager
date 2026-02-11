@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@deafwave/osrs-botmaker-types':
-        specifier: ^0.7.32
+        specifier: ^0.7.34
         version: 0.7.34
     devDependencies:
       '@eslint/eslintrc':
