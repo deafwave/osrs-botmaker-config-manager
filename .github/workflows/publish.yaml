@@ -54,6 +54,8 @@ jobs:
         run: |
           pnpm i
           pnpm lint
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ⏫ Bumping version (semantic)
         if: github.ref_type != 'tag' && github.actor != 'github-actions[bot]'
@@ -112,6 +114,8 @@ jobs:
         run: |
           pnpm i
           pnpm build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set npm entrypoint exports
         shell: bash
@@ -157,6 +161,8 @@ jobs:
         run: |
           pnpm i
           pnpm build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🚀 Publish to GitHub Packages
         run: |
